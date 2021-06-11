@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.Setter;
+import transport.co.api.request.RouteRequest;
+import transport.co.api.request.StopRequest;
 
 import javax.persistence.*;
 import java.util.List;
@@ -19,16 +21,31 @@ import java.util.List;
 public class Stop {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "route_generator")
+    @SequenceGenerator(name="route_generator", sequenceName = "route_seq")
     private long id;
 
-    @OneToOne(mappedBy= "nextStop", cascade = CascadeType.ALL)
-    private Stop prevStop;
-
-    @OneToOne
-    private Stop nextStop;
+//    @OneToOne(mappedBy= "nextStop", cascade = CascadeType.ALL)
+//    @Column(nullable = true)
+//    private Stop prevStop;
+//
+//    @OneToOne
+//    @Column(nullable = true)
+//    private Stop nextStop;
+//
+    private String name;
 
     @ManyToMany(mappedBy="routeStops")
     private List<Route> routes;
+
+  //  @OneToMany(cascade = CascadeType.REMOVE,mappedBy = "stop")
+   // private List<Schedule> schedule;
+
+    public Stop (StopRequest stopRequest){
+        this.name=stopRequest.getName();
+    }
+
+    public Stop(){
+    }
 
 }
